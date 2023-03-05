@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "hOOOGGyouzD+HrAyeagemOh9uFBjZjxUtNAxV2ZQoC4tNNYcHoB9/kBEP9tPmF+FGwvkTsDL2b8HqImk18/89g==",
+  "dgSpecHash": "UAIk4bNyYBdCIhlssFnlqR08ot9mz9DVskNGkOdn+KbXRjibog00sJxEbmXeU62tbYnJgMQ1CNFuHv+0vatAgw==",
   "success": true,
   "projectFilePath": "D:\\WeatherApp\\huli-alumni-template\\WeatherApp\\WeatherAppTests\\WeatherAppTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jarda\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\jarda\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",
