@@ -22,6 +22,7 @@ namespace WeatherApp.Services
         {
             var user = new User()
             {
+                Name = request.Name,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
@@ -46,6 +47,11 @@ namespace WeatherApp.Services
         public bool ValidPassword(string password)
         {
             return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$");
+        }
+
+        public bool ValidName(string name)
+        {
+            return Regex.IsMatch(name, "^[a-zA-Z]+$");
         }
     }
 }

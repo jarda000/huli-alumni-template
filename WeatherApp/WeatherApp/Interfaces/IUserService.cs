@@ -10,5 +10,6 @@ namespace WeatherApp.Interfaces
         bool EmailExists(string email);
         bool ValidEmail(string email);
         bool ValidPassword(string password);
+        bool ValidName(string name);
     }
 }
