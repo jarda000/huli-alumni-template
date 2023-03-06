@@ -10,12 +10,10 @@ namespace WeatherApp.Services
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IDbUserService _dbUserService;
 
-        public UserService(ApplicationDbContext context, IDbUserService dbUserService)
+        public UserService(ApplicationDbContext context)
         {
             _context = context;
-            _dbUserService = dbUserService;
         }
 
         public void Register(UserDTO request)
@@ -26,17 +24,31 @@ namespace WeatherApp.Services
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
-            _dbUserService.Add(user);
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
-        public User GetUser(UserDTO request)
+        public bool ValidateUser(string email, string token)
         {
-            return _dbUserService.Get(request);
+            var user = GetUser(email);
+            if (user.EmailVerification.Token == token)
+            {
+                user.IsEmailConfirmed = true;
+                _context.Users.Update(user);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public User GetUser(string email)
+        {
+            return _context.Users.FirstOrDefault(x => x.Email == email);
         }
 
         public bool EmailExists(string email)
         {
-            return _context.Users.Any(p => p.Email == email);
+            return _context.Users.FirstOrDefault(x => x.Email == email) != null;
         }
 
         public bool ValidEmail(string email)

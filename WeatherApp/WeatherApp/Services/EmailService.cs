@@ -4,7 +4,6 @@ using WeatherApp.Contexts;
 using WeatherApp.Models.Entities;
 using SendGrid.Helpers.Mail.Model;
 using WeatherApp.Interfaces;
-using WeatherApp.Models.DTOs;
 using System.Web;
 
 namespace WeatherApp.Services
@@ -30,19 +29,32 @@ namespace WeatherApp.Services
             var response = await client.SendEmailAsync(msg);
         }
 
-        public void EmailVerification(UserDTO request)
+        public void EmailVerification(User user)
         {
             string token = Guid.NewGuid().ToString();
             string baseUrl = "http://localhost:5110/api/verify";
-            string url = $"{baseUrl}?email={HttpUtility.UrlEncode(request.Email)}&token={HttpUtility.UrlEncode(token)}";
+            string url = $"{baseUrl}?email={HttpUtility.UrlEncode(user.Email)}&token={HttpUtility.UrlEncode(token)}";
+
+            var emailVerification = new EmailVerification
+            {
+                Email = user.Email,
+                Token = token,
+                User = user,
+            };
+            _context.EmailVerification.Add(emailVerification);
+            _context.SaveChanges();
 
             var verificationEmail = new EmailMessage
             {
-                EmailAddress = request.Email,
+                EmailAddress = user.Email,
                 EmailSubject = "WeatherApp verification",
-                EmailBody = $"Dear {request.Name},/Please verify you new account, the link is active for 24 hours./Have a nice day, WeatherApp",
+                EmailBody = $"Dear {user.Name},/Please verify you new account, the link is active for 24 hours./Have a nice day, WeatherApp",
                 HtmlContent = url,
+                User = user,
             };
+            _context.EmailMessages.Add(verificationEmail);
+            _context.SaveChanges();
+            this.SendEmail(verificationEmail);
         }
     }
 }

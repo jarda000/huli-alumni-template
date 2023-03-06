@@ -11,9 +11,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IDbEmailService, DbEmailService>();
-builder.Services.AddScoped<IDbCityService, DbCityService>();
-builder.Services.AddScoped<IDbUserService, DbUserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();

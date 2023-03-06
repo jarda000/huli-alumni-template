@@ -6,6 +6,6 @@ namespace WeatherApp.Interfaces
     public interface IEmailService
     {
         Task SendEmail(EmailMessage emailMessage);
-        void EmailVerification(UserDTO request);
+        void EmailVerification(User user);
     }
 }

@@ -6,7 +6,8 @@ namespace WeatherApp.Interfaces
     public interface IUserService
     {
         void Register(UserDTO request);
-        User GetUser(UserDTO request);
+        User GetUser(string email);
+        bool ValidateUser(string email, string token);
         bool EmailExists(string email);
         bool ValidEmail(string email);
         bool ValidPassword(string password);

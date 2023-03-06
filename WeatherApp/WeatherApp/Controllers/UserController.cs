@@ -41,13 +41,15 @@ namespace WeatherApp.Controllers
                 return BadRequest("Existing account!");
             }
             _userService.Register(request);
+            var user = _userService.GetUser(request.Email);
+            _emailService.EmailVerification(user);
             return RedirectToAction("Login");
         }
 
         [HttpPost("login")]
         public IActionResult Login(UserDTO request)
         {
-            var user = _userService.GetUser(request);
+            var user = _userService.GetUser(request.Email);
             if(user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return BadRequest("Invalid username or password!");
@@ -55,10 +57,14 @@ namespace WeatherApp.Controllers
             return Ok(_tokenService.CreateToken(user));
         }
 
-        [HttpPost("verify")]
-        public IActionResult Verify(string link)
+        [HttpGet("verify")]
+        public IActionResult Verify(string email, string token)
         {
-            return Ok();
+            if (!_userService.ValidateUser(email, token))
+            {
+                return BadRequest("The verification link is invalid or has expired. Please try again.");
+            }
+            return Ok("Your email address has been verified. Thank you!");
         }
     }
 }
