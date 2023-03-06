@@ -7,5 +7,6 @@ namespace WeatherApp.Interfaces
     {
         Task SendEmail(EmailMessage emailMessage);
         void EmailVerification(User user);
+        void PasswordReset(string email);
     }
 }

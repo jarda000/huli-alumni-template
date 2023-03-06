@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Web;
 using WeatherApp.Contexts;
 using WeatherApp.Interfaces;
 using WeatherApp.Models.DTOs;
 
 namespace WeatherApp.Controllers
 {
-    [Route("api/")]
+    [Route("user/")]
     [ApiController]
     public class UserController : MasterController
     {
@@ -22,7 +26,7 @@ namespace WeatherApp.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(UserDTO request)
+        public IActionResult Register(RegisterDTO request)
         {
             if(!_userService.ValidName(request.Name))
             {
@@ -43,11 +47,11 @@ namespace WeatherApp.Controllers
             _userService.Register(request);
             var user = _userService.GetUser(request.Email);
             _emailService.EmailVerification(user);
-            return RedirectToAction("Login");
+            return Ok("Registration succesful!");
         }
 
         [HttpPost("login")]
-        public IActionResult Login(UserDTO request)
+        public IActionResult Login(LoginDTO request)
         {
             var user = _userService.GetUser(request.Email);
             if(user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
@@ -60,11 +64,58 @@ namespace WeatherApp.Controllers
         [HttpGet("verify")]
         public IActionResult Verify(string email, string token)
         {
+            if (!_userService.ValidEmail(email))
+            {
+                return BadRequest("Invalid email address.");
+            }
+            email = email.Trim();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid token.");
+            }
+            token = token.Trim();
+
+            email = HttpUtility.UrlEncode(email);
+            token = HttpUtility.UrlEncode(token);
+
             if (!_userService.ValidateUser(email, token))
             {
                 return BadRequest("The verification link is invalid or has expired. Please try again.");
             }
             return Ok("Your email address has been verified. Thank you!");
+        }
+
+        [HttpPost("password-reset")]
+        public IActionResult PasswordReset(string email)
+        {
+            if (!_userService.ValidEmail(email))
+            {
+                return BadRequest("Invalid email!");
+            }
+            if (!_userService.EmailExists(email))
+            {
+                return BadRequest("No account registered for this email!");
+            }
+            _emailService.PasswordReset(email);
+            return Ok("Link for password reset has been sent, check your email!");
+        }
+
+        [HttpGet("password-reset")]
+        public IActionResult PasswordReset(string email, string token)
+        {
+            return Ok();
+        }
+
+        [HttpPost("{id}/update-password"), Authorize]
+        public IActionResult UpdatePassword(string email, string password)
+        {
+            if(!_userService.ValidPassword(password))
+            {
+                return BadRequest("Invalid password!");
+            }
+            _userService.UpdatePassword(email, password);
+            return Ok("Your password has been updated");
         }
     }
 }

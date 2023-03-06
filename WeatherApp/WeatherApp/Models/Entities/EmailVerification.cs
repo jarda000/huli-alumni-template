@@ -1,4 +1,6 @@
-﻿namespace WeatherApp.Models.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WeatherApp.Models.Entities
 {
     public class EmailVerification
     {

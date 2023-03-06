@@ -159,3 +159,5 @@ D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\r
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\WeatherAppTests.pdb
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\WeatherAppTests.genruntimeconfig.cache
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\ref\WeatherAppTests.dll
+D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\SendGrid.dll
+D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\StarkbankEcdsa.dll

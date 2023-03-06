@@ -37,8 +37,8 @@ namespace WeatherApp.Services
 
             var emailVerification = new EmailVerification
             {
-                Email = user.Email,
-                Token = token,
+                Email = HttpUtility.UrlEncode(user.Email),
+                Token = HttpUtility.UrlEncode(token),
                 User = user,
             };
             _context.EmailVerification.Add(emailVerification);
@@ -49,6 +49,36 @@ namespace WeatherApp.Services
                 EmailAddress = user.Email,
                 EmailSubject = "WeatherApp verification",
                 EmailBody = $"Dear {user.Name},/Please verify you new account, the link is active for 24 hours./Have a nice day, WeatherApp",
+                HtmlContent = url,
+                User = user,
+            };
+            _context.EmailMessages.Add(verificationEmail);
+            _context.SaveChanges();
+            this.SendEmail(verificationEmail);
+        }
+
+        public void PasswordReset(string email)
+        {
+            string token = Guid.NewGuid().ToString();
+            string baseUrl = "http://localhost:5110/api/verify";
+            string url = $"{baseUrl}?email={HttpUtility.UrlEncode(email)}&token={HttpUtility.UrlEncode(token)}";
+
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+
+            var passwordReset = new PasswordReset
+            {
+                Email = HttpUtility.UrlEncode(email),
+                Token = HttpUtility.UrlEncode(token),
+                User = user,
+            };
+            _context.PasswordReset.Add(passwordReset);
+            _context.SaveChanges();
+
+            var verificationEmail = new EmailMessage
+            {
+                EmailAddress = user.Email,
+                EmailSubject = "WeatherApp password reset",
+                EmailBody = $"Dear {user.Name},/Here is you link for password reset, the link is active for 10 minutes./Have a nice day, WeatherApp",
                 HtmlContent = url,
                 User = user,
             };

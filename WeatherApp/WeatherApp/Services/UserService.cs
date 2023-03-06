@@ -16,7 +16,7 @@ namespace WeatherApp.Services
             _context = context;
         }
 
-        public void Register(UserDTO request)
+        public void Register(RegisterDTO request)
         {
             var user = new User()
             {
@@ -39,6 +39,14 @@ namespace WeatherApp.Services
                 return true;
             }
             return false;
+        }
+
+        public void UpdatePassword(string email, string password)
+        {
+            var user = GetUser(email);
+            user.Password = password;
+            _context.Users.Update(user);
+            _context.SaveChanges();
         }
 
         public User GetUser(string email)

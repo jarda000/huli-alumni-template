@@ -1,4 +1,6 @@
-﻿namespace WeatherApp.Models.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WeatherApp.Models.Entities
 {
     public class User
     {
@@ -7,8 +9,12 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public bool IsEmailConfirmed { get; set; } = false;
-        public int EmailVerificationId { get; set; }
-        public EmailVerification EmailVerification { get; set; }
+        [ForeignKey("EmailVerification")]
+        public int? EmailVerificationId { get; set; }
+        public EmailVerification? EmailVerification { get; set; }
+        [ForeignKey("PasswordReset")]
+        public int? PasswordResetId { get; set; }
+        public PasswordReset? PasswordReset { get; set; }
         public List<EmailMessage> EmailMessages { get; set; }
         public List<City> Cities { get; set; }
     }
