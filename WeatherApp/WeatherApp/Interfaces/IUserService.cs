@@ -10,6 +10,7 @@ namespace WeatherApp.Interfaces
         bool ValidateUser(string email, string token);
         void UpdatePassword(int id, string password);
         void UpdateEmail(int id, string email);
+        public User GetById(int id);
         bool EmailExists(string email);
         bool ValidEmail(string email);
         bool ValidPassword(string password);

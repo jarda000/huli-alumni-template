@@ -57,7 +57,7 @@ namespace WeatherApp.Services
             _context.SaveChanges();
         }
 
-        private User GetById(int id)
+        public User GetById(int id)
         {
             return _context.Users.FirstOrDefault(x => x.Id == id);
         }
