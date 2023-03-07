@@ -7,6 +7,7 @@ using System.Web;
 using WeatherApp.Contexts;
 using WeatherApp.Interfaces;
 using WeatherApp.Models.DTOs;
+using WeatherApp.Services;
 
 namespace WeatherApp.Controllers
 {
@@ -18,7 +19,7 @@ namespace WeatherApp.Controllers
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
 
-        public UserController(IUserService registerService, ITokenService tokenService,IEmailService emailService, IHttpContextAccessor httpContextAccessor, ApplicationDbContext dbContext) : base(httpContextAccessor, dbContext)
+        public UserController(IUserService registerService, ITokenService tokenService,IEmailService emailService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userService = registerService;
             _tokenService = tokenService;
@@ -47,7 +48,7 @@ namespace WeatherApp.Controllers
             _userService.Register(request);
             var user = _userService.GetUser(request.Email);
             _emailService.EmailVerification(user);
-            return Ok("Registration succesful!");
+            return Ok("Registration succesful, please verify your account, email has been sent to your email address!");
         }
 
         [HttpPost("login")]
@@ -104,18 +105,45 @@ namespace WeatherApp.Controllers
         [HttpGet("password-reset")]
         public IActionResult PasswordReset(string email, string token)
         {
-            return Ok();
+            if (!_userService.ValidEmail(email))
+            {
+                return BadRequest("Invalid email address.");
+            }
+            email = email.Trim();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid token.");
+            }
+            token = token.Trim();
+
+            email = HttpUtility.UrlEncode(email);
+            token = HttpUtility.UrlEncode(token);
+
+            var user = _userService.GetUser(email);
+            return RedirectToAction("{id}/update-password", _tokenService.CreateToken(user));
         }
 
         [HttpPost("{id}/update-password"), Authorize]
-        public IActionResult UpdatePassword(string email, string password)
+        public IActionResult UpdatePassword(int id, string password)
         {
             if(!_userService.ValidPassword(password))
             {
                 return BadRequest("Invalid password!");
             }
-            _userService.UpdatePassword(email, password);
+            _userService.UpdatePassword(id,password);
             return Ok("Your password has been updated");
+        }
+
+        [HttpPost("{id}/update-email"), Authorize]
+        public IActionResult UpdateEmail(int id, string email)
+        {
+            if (!_userService.ValidEmail(email))
+            {
+                return BadRequest("Invalid email!");
+            }
+            _userService.UpdateEmail(id,email);
+            return Ok("Your email has been updated");
         }
     }
 }

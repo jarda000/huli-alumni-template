@@ -41,12 +41,25 @@ namespace WeatherApp.Services
             return false;
         }
 
-        public void UpdatePassword(string email, string password)
+        public void UpdatePassword(int id, string password)
         {
-            var user = GetUser(email);
+            var user = GetById(id);
             user.Password = password;
             _context.Users.Update(user);
             _context.SaveChanges();
+        }
+
+        public void UpdateEmail(int id, string email)
+        {
+            var user = GetById(id);
+            user.Email = email;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+        }
+
+        private User GetById(int id)
+        {
+            return _context.Users.FirstOrDefault(x => x.Id == id);
         }
 
         public User GetUser(string email)
