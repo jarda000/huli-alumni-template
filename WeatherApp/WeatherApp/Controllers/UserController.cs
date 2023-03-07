@@ -19,7 +19,7 @@ namespace WeatherApp.Controllers
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
 
-        public UserController(IUserService registerService, ITokenService tokenService,IEmailService emailService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public UserController(IUserService registerService, ITokenService tokenService,IEmailService emailService, IHttpContextAccessor httpContextAccessor, ApplicationDbContext applicationDbContext) : base(httpContextAccessor, applicationDbContext)
         {
             _userService = registerService;
             _tokenService = tokenService;
@@ -121,28 +121,28 @@ namespace WeatherApp.Controllers
             token = HttpUtility.UrlEncode(token);
 
             var user = _userService.GetUser(email);
-            return RedirectToAction("{id}/update-password", _tokenService.CreateToken(user));
+            return RedirectToAction("/update-password", _tokenService.CreateToken(user));
         }
 
-        [HttpPost("{id}/update-password"), Authorize]
-        public IActionResult UpdatePassword(int id, string password)
+        [HttpPost("/update-password"), Authorize]
+        public IActionResult UpdatePassword(string password)
         {
             if(!_userService.ValidPassword(password))
             {
                 return BadRequest("Invalid password!");
             }
-            _userService.UpdatePassword(id,password);
+            _userService.UpdatePassword(user.Id,password);
             return Ok("Your password has been updated");
         }
 
-        [HttpPost("{id}/update-email"), Authorize]
-        public IActionResult UpdateEmail(int id, string email)
+        [HttpPost("/update-email"), Authorize]
+        public IActionResult UpdateEmail(string email)
         {
             if (!_userService.ValidEmail(email))
             {
                 return BadRequest("Invalid email!");
             }
-            _userService.UpdateEmail(id,email);
+            _userService.UpdateEmail(user.Id,email);
             return Ok("Your email has been updated");
         }
     }

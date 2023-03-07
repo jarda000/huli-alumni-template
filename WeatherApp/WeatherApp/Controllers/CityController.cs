@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WeatherApp.Contexts;
 using WeatherApp.Interfaces;
 using WeatherApp.Models;
 
@@ -14,7 +15,7 @@ namespace WeatherApp.Controllers
         private readonly ICityService _cityService;
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _configuration;
-        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration) : base(httpContextAccessor)
+        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration, ApplicationDbContext applicationDbContext) : base(httpContextAccessor, applicationDbContext)
         {
             _cityService = cityService;
             _weatherService = weatherService;

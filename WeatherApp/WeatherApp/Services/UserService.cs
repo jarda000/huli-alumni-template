@@ -1,4 +1,5 @@
-﻿using BCrypt.Net;
+﻿using Azure.Core;
+using BCrypt.Net;
 using System.Text.RegularExpressions;
 using WeatherApp.Contexts;
 using WeatherApp.Interfaces;
@@ -44,7 +45,7 @@ namespace WeatherApp.Services
         public void UpdatePassword(int id, string password)
         {
             var user = GetById(id);
-            user.Password = password;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(password);
             _context.Users.Update(user);
             _context.SaveChanges();
         }

@@ -161,3 +161,6 @@ D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\W
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\obj\Debug\net7.0\ref\WeatherAppTests.dll
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\SendGrid.dll
 D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\StarkbankEcdsa.dll
+D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\Microsoft.Extensions.Caching.Redis.dll
+D:\WeatherApp\huli-alumni-template\WeatherApp\WeatherAppTests\bin\Debug\net7.0\StackExchange.Redis.StrongName.dll

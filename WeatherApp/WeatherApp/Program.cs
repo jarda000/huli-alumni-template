@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using WeatherApp.Contexts;
 using WeatherApp.Interfaces;
 using WeatherApp.Middleware;
 using WeatherApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var keyString = builder.Configuration.GetSection("JWTToken").Value;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>
@@ -17,6 +21,18 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICityService, CityService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 
 builder.Services.AddSwaggerGen(options =>
