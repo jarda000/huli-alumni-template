@@ -75,6 +75,15 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+if (app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "WeatherApp-v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseAuthentication();
 
