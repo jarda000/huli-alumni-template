@@ -24,7 +24,7 @@ namespace WeatherApp.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, "User")
             };
-            var keyString = _configuration.GetSection("JWTToken").Value ?? Environment.GetEnvironmentVariable("JWT_TOKEN");
+            var keyString = _configuration.GetSection("JWT_TOKEN").Value ?? Environment.GetEnvironmentVariable("JWT_TOKEN");
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(keyString));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(

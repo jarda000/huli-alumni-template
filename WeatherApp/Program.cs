@@ -9,8 +9,8 @@ using WeatherApp.Middleware;
 using WeatherApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var keyString = builder.Configuration.GetSection("JWTToken").Value ?? Environment.GetEnvironmentVariable("JWT_TOKEN");
-var dbConnection = builder.Configuration.GetSection("ConnectionString").Value ?? Environment.GetEnvironmentVariable("CONNECTION_STRING");
+var keyString = builder.Configuration.GetSection("JWT_TOKEN").Value ?? Environment.GetEnvironmentVariable("JWT_TOKEN");
+var dbConnection = builder.Configuration.GetSection("CONNECTION_STRING").Value ?? Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>

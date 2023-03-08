@@ -21,7 +21,7 @@ namespace WeatherApp.Services
 
         public async Task SendEmail(EmailMessage emailMessage)
         {
-            var apiKey = _config.GetSection("EmailToken").Value ?? Environment.GetEnvironmentVariable("EMAIL_TOKEN");
+            var apiKey = _config.GetSection("EMAIL_TOKEN").Value ?? Environment.GetEnvironmentVariable("EMAIL_TOKEN");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("weatherapp@seznam.cz", "WeatherApp");
             var to = new EmailAddress(emailMessage.EmailAddress, emailMessage.User.Name);
