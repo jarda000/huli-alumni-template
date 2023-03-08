@@ -8,8 +8,8 @@ namespace WeatherApp.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<EmailMessage> EmailMessages { get; set; }
-        public DbSet<EmailVerification> EmailVerification { get; set; }
-        public DbSet<PasswordReset> PasswordReset { get; set; }
+        public DbSet<EmailVerification> EmailVerifications { get; set; }
+        public DbSet<PasswordReset> PasswordResets { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

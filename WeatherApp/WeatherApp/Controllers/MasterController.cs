@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
 using WeatherApp.Contexts;
+using WeatherApp.Interfaces;
 using WeatherApp.Models.Entities;
 
 namespace WeatherApp.Controllers
@@ -11,16 +12,16 @@ namespace WeatherApp.Controllers
     public class MasterController : ControllerBase
     {
         protected IHttpContextAccessor _httpContextAccessor;
-        protected ApplicationDbContext _applicationDbContext;
-        protected User user;
+        protected ApplicationDbContext _context;
+        protected User _user;
 
-        public MasterController(IHttpContextAccessor httpContextAccessor, ApplicationDbContext applicationDbContext)
+        public MasterController(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
-            _applicationDbContext = applicationDbContext;
+            _context = context;
 
-            var userId = _httpContextAccessor.HttpContext.Items.FirstOrDefault(i => i.Key == "Id").Value;
-            user = _applicationDbContext.Users.FirstOrDefault(p => p.Id.Equals(userId));
+            var id = _httpContextAccessor.HttpContext.Items.FirstOrDefault(i => i.Key == "Id").Value;
+            _user = _context.Users.FirstOrDefault(u => u.Id.Equals(id));
         }
     }
 }

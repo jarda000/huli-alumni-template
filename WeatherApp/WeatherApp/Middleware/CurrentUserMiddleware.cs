@@ -15,11 +15,11 @@ namespace WeatherApp.Middleware
         {
             var requestToken = httpContext.Request.Headers["Authorization"];
 
-            int playerId = tokenService.GetUserFromJwtClaim(requestToken);
+            int userId = tokenService.GetUserFromJwtClaim(requestToken);
 
-            if (playerId != -1)
+            if (userId != -1)
             {
-                httpContext.Items["Id"] = playerId;
+                httpContext.Items["Id"] = userId;
             }
 
             await next(httpContext);

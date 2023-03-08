@@ -23,6 +23,7 @@ namespace WeatherApp.Services
             {
                 Name = request.Name,
                 Email = request.Email,
+                IsEmailConfirmed = false,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
             _context.Users.Add(user);
@@ -32,7 +33,8 @@ namespace WeatherApp.Services
         public bool ValidateUser(string email, string token)
         {
             var user = GetUser(email);
-            if (user.EmailVerification.Token == token)
+            var emailVerification = _context.EmailVerifications.FirstOrDefault(x => x.User.Id == user.Id);
+            if (emailVerification.Token == token)
             {
                 user.IsEmailConfirmed = true;
                 _context.Users.Update(user);
@@ -42,22 +44,25 @@ namespace WeatherApp.Services
             return false;
         }
 
-        public void UpdatePassword(int id, string password)
+        public void UpdatePassword(User user, string password)
         {
-            var user = GetById(id);
             user.Password = BCrypt.Net.BCrypt.HashPassword(password);
             _context.Users.Update(user);
             _context.SaveChanges();
         }
 
-        public void UpdateEmail(int id, string email)
+        public void UpdateEmail(User user, string email)
         {
-            var user = GetById(id);
             user.Email = email;
             _context.Users.Update(user);
             _context.SaveChanges();
         }
-
+        public void UpdateName(User user, string name)
+        {
+            user.Name = name;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+        }
         public User GetById(int id)
         {
             return _context.Users.FirstOrDefault(x => x.Id == id);

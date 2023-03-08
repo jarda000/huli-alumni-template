@@ -12,7 +12,7 @@ using WeatherApp.Contexts;
 namespace WeatherApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230306132423_initial")]
+    [Migration("20230308090436_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -32,12 +32,6 @@ namespace WeatherApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Latitude")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Longitude")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -114,7 +108,10 @@ namespace WeatherApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailVerification");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("EmailVerifications");
                 });
 
             modelBuilder.Entity("WeatherApp.Models.Entities.PasswordReset", b =>
@@ -139,9 +136,15 @@ namespace WeatherApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("PasswordReset");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("PasswordResets");
                 });
 
             modelBuilder.Entity("WeatherApp.Models.Entities.User", b =>
@@ -156,9 +159,6 @@ namespace WeatherApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EmailVerificationId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsEmailConfirmed")
                         .HasColumnType("bit");
 
@@ -170,18 +170,7 @@ namespace WeatherApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PasswordResetId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("EmailVerificationId")
-                        .IsUnique()
-                        .HasFilter("[EmailVerificationId] IS NOT NULL");
-
-                    b.HasIndex("PasswordResetId")
-                        .IsUnique()
-                        .HasFilter("[PasswordResetId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -208,31 +197,26 @@ namespace WeatherApp.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WeatherApp.Models.Entities.User", b =>
-                {
-                    b.HasOne("WeatherApp.Models.Entities.EmailVerification", "EmailVerification")
-                        .WithOne("User")
-                        .HasForeignKey("WeatherApp.Models.Entities.User", "EmailVerificationId");
-
-                    b.HasOne("WeatherApp.Models.Entities.PasswordReset", "PasswordReset")
-                        .WithOne("User")
-                        .HasForeignKey("WeatherApp.Models.Entities.User", "PasswordResetId");
-
-                    b.Navigation("EmailVerification");
-
-                    b.Navigation("PasswordReset");
-                });
-
             modelBuilder.Entity("WeatherApp.Models.Entities.EmailVerification", b =>
                 {
-                    b.Navigation("User")
+                    b.HasOne("WeatherApp.Models.Entities.User", "User")
+                        .WithOne("EmailVerification")
+                        .HasForeignKey("WeatherApp.Models.Entities.EmailVerification", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WeatherApp.Models.Entities.PasswordReset", b =>
                 {
-                    b.Navigation("User")
+                    b.HasOne("WeatherApp.Models.Entities.User", "User")
+                        .WithOne("PasswordReset")
+                        .HasForeignKey("WeatherApp.Models.Entities.PasswordReset", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WeatherApp.Models.Entities.User", b =>
@@ -240,6 +224,10 @@ namespace WeatherApp.Migrations
                     b.Navigation("Cities");
 
                     b.Navigation("EmailMessages");
+
+                    b.Navigation("EmailVerification");
+
+                    b.Navigation("PasswordReset");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,22 +11,22 @@ using WeatherApp.Services;
 
 namespace WeatherApp.Controllers
 {
-    [Route("user/")]
+    [Route("")]
     [ApiController]
-    public class UserController : MasterController
+    public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
 
-        public UserController(IUserService registerService, ITokenService tokenService,IEmailService emailService, IHttpContextAccessor httpContextAccessor, ApplicationDbContext applicationDbContext) : base(httpContextAccessor, applicationDbContext)
+        public UserController(ITokenService tokenService, IEmailService emailService, IUserService userService)
         {
-            _userService = registerService;
             _tokenService = tokenService;
             _emailService = emailService;
+            _userService = userService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("/register")]
         public IActionResult Register(RegisterDTO request)
         {
             if(!_userService.ValidName(request.Name))
@@ -51,7 +51,7 @@ namespace WeatherApp.Controllers
             return Ok("Registration succesful, please verify your account, email has been sent to your email address!");
         }
 
-        [HttpPost("login")]
+        [HttpPost("/login")]
         public IActionResult Login(LoginDTO request)
         {
             var user = _userService.GetUser(request.Email);
@@ -62,7 +62,7 @@ namespace WeatherApp.Controllers
             return Ok(_tokenService.CreateToken(user));
         }
 
-        [HttpGet("verify")]
+        [HttpGet("/verify")]
         public IActionResult Verify(string email, string token)
         {
             if (!_userService.ValidEmail(email))
@@ -77,9 +77,6 @@ namespace WeatherApp.Controllers
             }
             token = token.Trim();
 
-            email = HttpUtility.UrlEncode(email);
-            token = HttpUtility.UrlEncode(token);
-
             if (!_userService.ValidateUser(email, token))
             {
                 return BadRequest("The verification link is invalid or has expired. Please try again.");
@@ -87,7 +84,7 @@ namespace WeatherApp.Controllers
             return Ok("Your email address has been verified. Thank you!");
         }
 
-        [HttpPost("password-reset")]
+        [HttpPost("/password-reset")]
         public IActionResult PasswordReset(string email)
         {
             if (!_userService.ValidEmail(email))
@@ -102,7 +99,7 @@ namespace WeatherApp.Controllers
             return Ok("Link for password reset has been sent, check your email!");
         }
 
-        [HttpGet("password-reset")]
+        [HttpGet("/password-reset")]
         public IActionResult PasswordReset(string email, string token)
         {
             if (!_userService.ValidEmail(email))
@@ -117,33 +114,8 @@ namespace WeatherApp.Controllers
             }
             token = token.Trim();
 
-            email = HttpUtility.UrlEncode(email);
-            token = HttpUtility.UrlEncode(token);
-
             var user = _userService.GetUser(email);
-            return RedirectToAction("/update-password", _tokenService.CreateToken(user));
-        }
-
-        [HttpPost("/update-password"), Authorize]
-        public IActionResult UpdatePassword(string password)
-        {
-            if(!_userService.ValidPassword(password))
-            {
-                return BadRequest("Invalid password!");
-            }
-            _userService.UpdatePassword(user.Id,password);
-            return Ok("Your password has been updated");
-        }
-
-        [HttpPost("/update-email"), Authorize]
-        public IActionResult UpdateEmail(string email)
-        {
-            if (!_userService.ValidEmail(email))
-            {
-                return BadRequest("Invalid email!");
-            }
-            _userService.UpdateEmail(user.Id,email);
-            return Ok("Your email has been updated");
+            return Ok();
         }
     }
 }

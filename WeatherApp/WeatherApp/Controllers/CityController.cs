@@ -7,7 +7,7 @@ using WeatherApp.Models;
 
 namespace WeatherApp.Controllers
 {
-    [Route("user")]
+    [Route("/city")]
     [ApiController]
     [Authorize]
     public class CityController : MasterController
@@ -15,26 +15,43 @@ namespace WeatherApp.Controllers
         private readonly ICityService _cityService;
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _configuration;
-        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration, ApplicationDbContext applicationDbContext) : base(httpContextAccessor, applicationDbContext)
+        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration, ApplicationDbContext context) : base(httpContextAccessor, context)
         {
             _cityService = cityService;
             _weatherService = weatherService;
             _configuration = configuration;
         }
 
-        [HttpPost("{id}/add")]
-        public IActionResult AddCityToMyList(int id, string city)
+        [HttpPost("/add")]
+        public IActionResult AddCityToMyList(string city)
         {
-            if(!_cityService.ValidCity(city))
+            if(!_cityService.ValidCityName(city))
             {
-                return BadRequest("");
+                return BadRequest("Invalid city name");
             }
-            _cityService.AddCityToMyList(id, city);
-            return Ok(city);
+            _cityService.AddCityToMyList(_user, city);
+            return Ok($"{city} added to your list");
         }
 
-        [HttpGet("weather")]
-        public async Task<ActionResult<WeatherData>> GetWeatherData([FromQuery] string city)
+        [HttpPost("/remove/{id}")]
+        public IActionResult RemoveCityFromMyList(int id)
+        {
+            if(!_cityService.ValidCity(_user, id))
+            {
+                return BadRequest("Invalid city Id");
+            }
+            _cityService.DeleteCityFromMyList(_user, id);
+            return Ok("City removed from the list");
+        }
+
+        [HttpGet("/my-city-list")]
+        public IActionResult GetMyCities()
+        {
+            return Ok(_cityService.GetAll(_user));
+        }
+
+        [HttpGet("/weather")]
+        public async Task<ActionResult<WeatherData>> GetWeatherData(string city)
         {
             var apiKey = _configuration.GetSection("WeatherAPIKey").Value;
             try

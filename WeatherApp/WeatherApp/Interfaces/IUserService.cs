@@ -8,8 +8,9 @@ namespace WeatherApp.Interfaces
         void Register(RegisterDTO request);
         User GetUser(string email);
         bool ValidateUser(string email, string token);
-        void UpdatePassword(int id, string password);
-        void UpdateEmail(int id, string email);
+        void UpdatePassword(User user, string password);
+        void UpdateEmail(User user, string email);
+        void UpdateName(User user, string name);
         public User GetById(int id);
         bool EmailExists(string email);
         bool ValidEmail(string email);

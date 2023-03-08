@@ -32,7 +32,7 @@ namespace WeatherApp.Services
         public void EmailVerification(User user)
         {
             string token = Guid.NewGuid().ToString();
-            string baseUrl = "http://localhost:5110/api/verify";
+            string baseUrl = "http://localhost:5110/verify";
             string url = $"{baseUrl}?email={HttpUtility.UrlEncode(user.Email)}&token={HttpUtility.UrlEncode(token)}";
 
             var emailVerification = new EmailVerification
@@ -41,14 +41,14 @@ namespace WeatherApp.Services
                 Token = HttpUtility.UrlEncode(token),
                 User = user,
             };
-            _context.EmailVerification.Add(emailVerification);
+            _context.EmailVerifications.Add(emailVerification);
             _context.SaveChanges();
 
             var verificationEmail = new EmailMessage
             {
                 EmailAddress = user.Email,
                 EmailSubject = "WeatherApp verification",
-                EmailBody = $"Dear {user.Name},/Please verify you new account, the link is active for 24 hours./Have a nice day, WeatherApp",
+                EmailBody = $"Dear {user.Name},\nPlease verify you new account, the link is active for 24 hours.\nHave a nice day, WeatherApp",
                 HtmlContent = url,
                 User = user,
             };
@@ -60,7 +60,7 @@ namespace WeatherApp.Services
         public void PasswordReset(string email)
         {
             string token = Guid.NewGuid().ToString();
-            string baseUrl = "http://localhost:5110/api/verify";
+            string baseUrl = "http://localhost:5110/password-reset";
             string url = $"{baseUrl}?email={HttpUtility.UrlEncode(email)}&token={HttpUtility.UrlEncode(token)}";
 
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
@@ -71,14 +71,14 @@ namespace WeatherApp.Services
                 Token = HttpUtility.UrlEncode(token),
                 User = user,
             };
-            _context.PasswordReset.Add(passwordReset);
+            _context.PasswordResets.Add(passwordReset);
             _context.SaveChanges();
 
             var verificationEmail = new EmailMessage
             {
                 EmailAddress = user.Email,
                 EmailSubject = "WeatherApp password reset",
-                EmailBody = $"Dear {user.Name},/Here is you link for password reset, the link is active for 10 minutes./Have a nice day, WeatherApp",
+                EmailBody = $"Dear {user.Name},\nHere is you link for password reset, the link is active for 10 minutes.\nHave a nice day, WeatherApp",
                 HtmlContent = url,
                 User = user,
             };
