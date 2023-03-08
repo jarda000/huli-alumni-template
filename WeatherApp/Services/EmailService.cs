@@ -32,7 +32,7 @@ namespace WeatherApp.Services
         public void EmailVerification(User user)
         {
             string token = Guid.NewGuid().ToString();
-            string baseUrl = "http://localhost:5110/verify";
+            string baseUrl = "https://weatherapphuli.azurewebsites.net/verify";
             string url = $"{baseUrl}?email={HttpUtility.UrlEncode(user.Email)}&token={HttpUtility.UrlEncode(token)}";
 
             var emailVerification = new EmailVerification
@@ -60,7 +60,7 @@ namespace WeatherApp.Services
         public void PasswordReset(string email)
         {
             string token = Guid.NewGuid().ToString();
-            string baseUrl = "http://localhost:5110/password-reset";
+            string baseUrl = "https://weatherapphuli.azurewebsites.net/password-reset";
             string url = $"{baseUrl}?email={HttpUtility.UrlEncode(email)}&token={HttpUtility.UrlEncode(token)}";
 
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
