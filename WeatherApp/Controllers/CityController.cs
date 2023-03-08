@@ -53,7 +53,7 @@ namespace WeatherApp.Controllers
         [HttpGet("/weather")]
         public async Task<ActionResult<WeatherData>> GetWeatherData(string city)
         {
-            var apiKey = _configuration.GetSection("WeatherAPIKey").Value;
+            var apiKey = _configuration.GetSection("WEATHER_API_KEY").Value ?? Environment.GetEnvironmentVariable("WEATHER_API_KEY");
             try
             {
                 var weatherData = await _weatherService.FetchWeatherData(city, apiKey);
