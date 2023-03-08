@@ -14,7 +14,7 @@ var dbConnection = builder.Configuration.GetSection("ConnectionString").Value ??
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>
-    (options => options.UseSqlServer(builder.Configuration.GetConnectionString(dbConnection)));
+    (options => options.UseSqlServer(dbConnection));
 
 builder.Services.AddHttpContextAccessor();
 

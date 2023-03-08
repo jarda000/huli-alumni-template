@@ -20,6 +20,10 @@ namespace WeatherApp.Controllers
         [HttpPost("/update-password")]
         public IActionResult UpdatePassword(string password)
         {
+            if (!_user.IsEmailConfirmed)
+            {
+                return BadRequest("Please verify your email!");
+            }
             if (!_userService.ValidPassword(password))
             {
                 return BadRequest("Invalid password!");
@@ -31,6 +35,10 @@ namespace WeatherApp.Controllers
         [HttpPost("/update-email")]
         public IActionResult UpdateEmail(string email)
         {
+            if (!_user.IsEmailConfirmed)
+            {
+                return BadRequest("Please verify your email!");
+            }
             if (!_userService.ValidEmail(email))
             {
                 return BadRequest("Invalid email!");
@@ -42,6 +50,10 @@ namespace WeatherApp.Controllers
         [HttpPost("/update-name")]
         public IActionResult UpdateName(string name)
         {
+            if (!_user.IsEmailConfirmed)
+            {
+                return BadRequest("Please verify your email!");
+            }
             if (!_userService.ValidName(name))
             {
                 return BadRequest("Invalid name!");

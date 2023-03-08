@@ -11,8 +11,8 @@ namespace WeatherApp.Controllers
     [ApiController]
     public class MasterController : ControllerBase
     {
-        protected IHttpContextAccessor _httpContextAccessor;
-        protected ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ApplicationDbContext _context;
         protected User _user;
 
         public MasterController(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
