@@ -15,39 +15,65 @@ namespace WeatherApp.Controllers
         private readonly ICityService _cityService;
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _configuration;
-        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration, ApplicationDbContext context) : base(httpContextAccessor, context)
+        private readonly ILogger<CityController> _logger;
+        public CityController(IHttpContextAccessor httpContextAccessor, ICityService cityService, IWeatherService weatherService, IConfiguration configuration, ApplicationDbContext context, ILogger<CityController> logger) : base(httpContextAccessor, context)
         {
             _cityService = cityService;
             _weatherService = weatherService;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost("/add")]
         public IActionResult AddCityToMyList(string city)
         {
-            if(!_cityService.ValidCityName(city))
+            try
             {
-                return BadRequest("Invalid city name");
+                if (!_cityService.ValidCityName(city))
+                {
+                    return BadRequest("Invalid city name");
+                }
+                _cityService.AddCityToMyList(_user, city);
+                return Ok($"{city} added to your list");
             }
-            _cityService.AddCityToMyList(_user, city);
-            return Ok($"{city} added to your list");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured during adding city to user list");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. Please try again later.");
+            }
         }
 
         [HttpPost("/remove/{id}")]
         public IActionResult RemoveCityFromMyList(int id)
         {
-            if(!_cityService.ValidCity(_user, id))
+            try
             {
-                return BadRequest("Invalid city Id");
+                if (!_cityService.ValidCity(_user, id))
+                {
+                    return BadRequest("Invalid city Id");
+                }
+                _cityService.DeleteCityFromMyList(_user, id);
+                return Ok("City removed from the list");
             }
-            _cityService.DeleteCityFromMyList(_user, id);
-            return Ok("City removed from the list");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured during removing city id{id} from user id {_user.Id} list");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. Please try again later.");
+            }
         }
 
         [HttpGet("/my-city-list")]
         public IActionResult GetMyCities()
         {
-            return Ok(_cityService.GetAll(_user));
+            try
+            {
+                return Ok(_cityService.GetAll(_user));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured during getting list of cities for user id {_user.Id}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. Please try again later.");
+            }
         }
 
         [HttpGet("/weather")]
@@ -61,7 +87,8 @@ namespace WeatherApp.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Failed to fetch weather data: {ex.Message}");
+                _logger.LogError(ex, $"An error occurred while getting weather data for {city}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. Please try again later.");
             }
         }
     }
