@@ -29,6 +29,10 @@ namespace WeatherApp.Controllers
         {
             try
             {
+                if (!_user.IsEmailConfirmed)
+                {
+                    return BadRequest("Please verify your email!");
+                }
                 if (!_cityService.ValidCityName(city))
                 {
                     return BadRequest("Invalid city name");
@@ -48,6 +52,10 @@ namespace WeatherApp.Controllers
         {
             try
             {
+                if (!_user.IsEmailConfirmed)
+                {
+                    return BadRequest("Please verify your email!");
+                }
                 if (!_cityService.ValidCity(_user, id))
                 {
                     return BadRequest("Invalid city Id");
@@ -67,6 +75,10 @@ namespace WeatherApp.Controllers
         {
             try
             {
+                if (!_user.IsEmailConfirmed)
+                {
+                    return BadRequest("Please verify your email!");
+                }
                 return Ok(_cityService.GetAll(_user));
             }
             catch (Exception ex)
@@ -82,6 +94,10 @@ namespace WeatherApp.Controllers
             var apiKey = _configuration.GetSection("WEATHER_API_KEY").Value ?? Environment.GetEnvironmentVariable("WEATHER_API_KEY");
             try
             {
+                if (!_user.IsEmailConfirmed)
+                {
+                    return BadRequest("Please verify your email!");
+                }
                 var weatherData = await _weatherService.FetchWeatherData(city, apiKey);
                 return Ok(weatherData);
             }

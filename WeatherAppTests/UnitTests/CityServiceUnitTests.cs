@@ -32,7 +32,7 @@ namespace WeatherAppTests.UnitTests
         [Theory]
         [InlineData("New York")]
         [InlineData("Los Angeles, CA")]
-        public void ValidCityName_Should_ReturnTrue_When_ValidInputIsProvided(string input)
+        public async Task ValidCityName_Should_ReturnTrue_When_ValidInputIsProvided(string input)
         {
             // Act
             var result = _cityService.ValidCityName(input);
@@ -45,7 +45,7 @@ namespace WeatherAppTests.UnitTests
         [InlineData("New York, 123")]
         [InlineData("123")]
         [InlineData("")]
-        public void ValidCityName_Should_ReturnFalse_When_InvalidInputIsProvided(string input)
+        public async Task ValidCityName_Should_ReturnFalse_When_InvalidInputIsProvided(string input)
         {
             // Act
             var result = _cityService.ValidCityName(input);

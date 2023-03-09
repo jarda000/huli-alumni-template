@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <UserSecretsId>0a70ae4c-f105-4633-b5ed-e0356fb67168</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,10 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeatherApp\WeatherApp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
   </ItemGroup>
 
 </Project>

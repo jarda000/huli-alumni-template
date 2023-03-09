@@ -10,7 +10,7 @@ namespace WeatherAppTests.UnitTests
     public class UserServiceTests
     {
         [Fact]
-        public void Register_AddsUserToContextAndSavesChanges()
+        public async Task Register_AddsUserToContextAndSavesChanges()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -38,7 +38,7 @@ namespace WeatherAppTests.UnitTests
         }
 
         [Fact]
-        public void ValidateUser_ReturnsTrueAndUpdatesUserIfTokenIsValidAndNotExpired()
+        public async Task ValidateUser_ReturnsTrueAndUpdatesUserIfTokenIsValidAndNotExpired()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -74,7 +74,7 @@ namespace WeatherAppTests.UnitTests
         }
 
         [Fact]
-        public void ValidateUser_ReturnsFalseIfTokenIsExpired()
+        public async Task ValidateUser_ReturnsFalseIfTokenIsExpired()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
