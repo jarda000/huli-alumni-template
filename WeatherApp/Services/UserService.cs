@@ -33,12 +33,23 @@ namespace WeatherApp.Services
         public bool ValidateUser(string email, string token)
         {
             var user = GetUser(email);
-            var emailVerification = _context.EmailVerifications.FirstOrDefault(x => x.User.Id == user.Id);
-            if (emailVerification.Token == token)
+            var emailVerification = _context.EmailVerifications.FirstOrDefault(x => x.User.Id == user.Id && x.Token == token);
+            if (emailVerification.ExpiryDate < DateTime.Now && emailVerification != null)
             {
                 user.IsEmailConfirmed = true;
                 _context.Users.Update(user);
                 _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool ValidPasswordReset(PasswordResetDTO passwordResetDTO)
+        {
+            var user = GetUser(passwordResetDTO.Email);
+            var passwordReset = _context.PasswordResets.FirstOrDefault(x => x.User.Id == user.Id && x.Token == passwordResetDTO.Token);
+            if(passwordReset != null && passwordReset.ExpiryDate < DateTime.Now)
+            {
                 return true;
             }
             return false;

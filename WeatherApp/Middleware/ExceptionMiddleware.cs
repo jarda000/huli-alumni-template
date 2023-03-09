@@ -5,10 +5,12 @@ namespace WeatherApp.Middleware
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -19,11 +21,17 @@ namespace WeatherApp.Middleware
             }
             catch (Exception ex)
             {
+                // Log the exception
+                _logger.LogError(ex, ex.Message);
+
+                // Write the exception to a log file
                 string logFilePath = "./ErrorLog.txt";
                 using (StreamWriter sw = new StreamWriter(logFilePath, true))
                 {
                     sw.WriteLine(DateTime.Now.ToString() + ": " + ex.Message);
                 }
+
+                // Return an appropriate response to the client
                 var response = new
                 {
                     error = ex.Message,

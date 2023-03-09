@@ -64,6 +64,31 @@ namespace WeatherApp.Controllers
 
         }
 
+        [HttpPost("resend-verification")]
+        public IActionResult ResendVerification(string email)
+        {
+            try
+            {
+                if (!_userService.ValidEmail(email))
+                {
+                    return BadRequest("Invalid email!");
+                }
+                var user = _userService.GetUser(email);
+                if (user == null)
+                {
+                    return BadRequest("Invalid email!");
+                }
+                _emailService.EmailVerification(user);
+                return Ok("New verification email has been sent to your email address!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured during new verification email request");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured during request. Please try again later.");
+            }
+
+        }
+
         [HttpPost("/login")]
         public IActionResult Login(LoginDTO request)
         {
@@ -84,23 +109,23 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet("/verify")]
-        public IActionResult Verify(string email, string token)
+        public IActionResult Verify(EmailVerificationDTO emailVerificationDTO)
         {
             try
             {
-                if (!_userService.ValidEmail(email))
+                if (!_userService.ValidEmail(emailVerificationDTO.Email))
                 {
                     return BadRequest("Invalid email address.");
                 }
-                email = email.Trim();
+                emailVerificationDTO.Email = emailVerificationDTO.Email.Trim();
 
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(emailVerificationDTO.Token))
                 {
                     return BadRequest("Invalid token.");
                 }
-                token = token.Trim();
+                emailVerificationDTO.Token = emailVerificationDTO.Token.Trim();
 
-                if (!_userService.ValidateUser(email, token))
+                if (!_userService.ValidateUser(emailVerificationDTO.Email, emailVerificationDTO.Token))
                 {
                     return BadRequest("The verification link is invalid or has expired. Please try again.");
                 }
@@ -137,24 +162,35 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet("/password-reset")]
-        public IActionResult PasswordReset(string email, string token)
+        public IActionResult PasswordReset(PasswordResetDTO passwordResetDTO)
         {
             try
             {
-                if (!_userService.ValidEmail(email))
+                if (!_userService.ValidEmail(passwordResetDTO.Email))
                 {
                     return BadRequest("Invalid email address.");
                 }
-                email = email.Trim();
+                passwordResetDTO.Email = passwordResetDTO.Email.Trim();
 
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(passwordResetDTO.Token))
                 {
                     return BadRequest("Invalid token.");
                 }
-                token = token.Trim();
+                passwordResetDTO.Token = passwordResetDTO.Token.Trim();
 
-                var user = _userService.GetUser(email);
-                return Ok();
+                if (!_userService.ValidPassword(passwordResetDTO.Password))
+                {
+                    return BadRequest("Invalid password!");
+                }
+
+                if(!_userService.ValidPasswordReset(passwordResetDTO))
+                {
+                    return BadRequest("Your password reset link is invalid or expired");
+                }
+
+                var user = _userService.GetUser(passwordResetDTO.Email);
+                _userService.UpdatePassword(user, passwordResetDTO.Password);
+                return Ok("Your password reset is done, you can login now");
             }
             catch (Exception ex)
             {
