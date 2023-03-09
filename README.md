@@ -8,7 +8,7 @@ LinkedIn: https://www.linkedin.com/in/jaroslavj/
 Email: jarda000@seznam.cz
 
 ## &rarr; [Coding projects](https://github.com/green-fox-academy/definitions/tree/master/project-phase/huli/coding-projects)
-{project-name}: {link-to-repo}
+WeatherAppHuli: https://weatherapphuli.azurewebsites.net/index.html
 
 ## &rarr; [Interview prep](https://github.com/green-fox-academy/teaching-materials/tree/master/interview)
 
