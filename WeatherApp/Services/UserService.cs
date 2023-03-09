@@ -38,6 +38,7 @@ namespace WeatherApp.Services
             {
                 user.IsEmailConfirmed = true;
                 _context.Users.Update(user);
+                _context.EmailVerifications.Remove(emailVerification);
                 _context.SaveChanges();
                 return true;
             }
@@ -50,6 +51,7 @@ namespace WeatherApp.Services
             var passwordReset = _context.PasswordResets.FirstOrDefault(x => x.User.Id == user.Id && x.Token == token);
             if(passwordReset != null && passwordReset.ExpiryDate > DateTime.Now)
             {
+                _context.PasswordResets.Remove(passwordReset);
                 return true;
             }
             return false;
