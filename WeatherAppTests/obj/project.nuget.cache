@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Rg6jXtkPGsiWhRBbXYVJa1l51SU3KzIhfsqIc2f5rhTNAd7ebuiKjgIG3mwrfRk0CTCOyryf4y3WE3sa12foHg==",
+  "dgSpecHash": "aj9QWF4uGsUUzoQaDETC4O44RhKiCfsx5Q4GNjVEDysgQBTHM/L2PRPDpG7nEYxvFzqAxe+K0slHWFFo+eVnfg==",
   "success": true,
   "projectFilePath": "D:\\WeatherApp\\huli-alumni-template\\WeatherAppTests\\WeatherAppTests.csproj",
   "expectedPackageFiles": [
@@ -21,6 +21,7 @@
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.3\\microsoft.entityframeworkcore.7.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.3\\microsoft.entityframeworkcore.abstractions.7.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.3\\microsoft.entityframeworkcore.analyzers.7.0.3.nupkg.sha512",
+    "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\7.0.3\\microsoft.entityframeworkcore.inmemory.7.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\7.0.3\\microsoft.entityframeworkcore.relational.7.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\7.0.3\\microsoft.entityframeworkcore.sqlite.7.0.3.nupkg.sha512",
     "C:\\Users\\jarda\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\7.0.3\\microsoft.entityframeworkcore.sqlite.core.7.0.3.nupkg.sha512",

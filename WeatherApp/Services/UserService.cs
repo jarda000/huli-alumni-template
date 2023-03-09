@@ -34,7 +34,7 @@ namespace WeatherApp.Services
         {
             var user = GetUser(email);
             var emailVerification = _context.EmailVerifications.FirstOrDefault(x => x.User.Id == user.Id && x.Token == token);
-            if (emailVerification.ExpiryDate < DateTime.Now && emailVerification != null)
+            if (emailVerification.ExpiryDate > DateTime.Now && emailVerification != null)
             {
                 user.IsEmailConfirmed = true;
                 _context.Users.Update(user);
@@ -48,7 +48,7 @@ namespace WeatherApp.Services
         {
             var user = GetUser(passwordResetDTO.Email);
             var passwordReset = _context.PasswordResets.FirstOrDefault(x => x.User.Id == user.Id && x.Token == passwordResetDTO.Token);
-            if(passwordReset != null && passwordReset.ExpiryDate < DateTime.Now)
+            if(passwordReset != null && passwordReset.ExpiryDate > DateTime.Now)
             {
                 return true;
             }
