@@ -109,23 +109,23 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet("/verify")]
-        public IActionResult Verify(EmailVerificationDTO emailVerificationDTO)
+        public IActionResult Verify(string email, string token)
         {
             try
             {
-                if (!_userService.ValidEmail(emailVerificationDTO.Email))
+                if (!_userService.ValidEmail(email))
                 {
                     return BadRequest("Invalid email address.");
                 }
-                emailVerificationDTO.Email = emailVerificationDTO.Email.Trim();
+                email = email.Trim();
 
-                if (string.IsNullOrEmpty(emailVerificationDTO.Token))
+                if (string.IsNullOrEmpty(email))
                 {
                     return BadRequest("Invalid token.");
                 }
-                emailVerificationDTO.Token = emailVerificationDTO.Token.Trim();
+                token = token.Trim();
 
-                if (!_userService.ValidateUser(emailVerificationDTO.Email, emailVerificationDTO.Token))
+                if (!_userService.ValidateUser(email, token))
                 {
                     return BadRequest("The verification link is invalid or has expired. Please try again.");
                 }
@@ -162,34 +162,34 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet("/password-reset")]
-        public IActionResult PasswordReset(PasswordResetDTO passwordResetDTO)
+        public IActionResult PasswordReset(string email, string token, string password)
         {
             try
             {
-                if (!_userService.ValidEmail(passwordResetDTO.Email))
+                if (!_userService.ValidEmail(email))
                 {
                     return BadRequest("Invalid email address.");
                 }
-                passwordResetDTO.Email = passwordResetDTO.Email.Trim();
+                email = email.Trim();
 
-                if (string.IsNullOrEmpty(passwordResetDTO.Token))
+                if (string.IsNullOrEmpty(token))
                 {
                     return BadRequest("Invalid token.");
                 }
-                passwordResetDTO.Token = passwordResetDTO.Token.Trim();
+                token = token.Trim();
 
-                if (!_userService.ValidPassword(passwordResetDTO.Password))
+                if (!_userService.ValidPassword(password))
                 {
                     return BadRequest("Invalid password!");
                 }
 
-                if(!_userService.ValidPasswordReset(passwordResetDTO))
+                if(!_userService.ValidPasswordReset(email, token))
                 {
                     return BadRequest("Your password reset link is invalid or expired");
                 }
 
-                var user = _userService.GetUser(passwordResetDTO.Email);
-                _userService.UpdatePassword(user, passwordResetDTO.Password);
+                var user = _userService.GetUser(email);
+                _userService.UpdatePassword(user, password);
                 return Ok("Your password reset is done, you can login now");
             }
             catch (Exception ex)

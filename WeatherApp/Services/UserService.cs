@@ -44,10 +44,10 @@ namespace WeatherApp.Services
             return false;
         }
 
-        public bool ValidPasswordReset(PasswordResetDTO passwordResetDTO)
+        public bool ValidPasswordReset(string email, string token)
         {
-            var user = GetUser(passwordResetDTO.Email);
-            var passwordReset = _context.PasswordResets.FirstOrDefault(x => x.User.Id == user.Id && x.Token == passwordResetDTO.Token);
+            var user = GetUser(email);
+            var passwordReset = _context.PasswordResets.FirstOrDefault(x => x.User.Id == user.Id && x.Token == token);
             if(passwordReset != null && passwordReset.ExpiryDate > DateTime.Now)
             {
                 return true;
